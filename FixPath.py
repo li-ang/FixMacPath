@@ -32,7 +32,6 @@ if isMac():
 		return sysPathString
 
 
-
 	def fixPath():
 		currSysPath = getSysPath()
 		# Basic sanity check to make sure our new path is not empty
@@ -46,12 +45,18 @@ if isMac():
 
 		return True
 
+	def fixGoPath():
+		environ['GOPATH'] = fixPathSettings.get("additional_gopath")
+
+		return True
+
 
 	def plugin_loaded():
 		global fixPathSettings
 		fixPathSettings = sublime.load_settings("Preferences.sublime-settings")
 		fixPathSettings.clear_on_change('fixpath-reload')
 		fixPathSettings.add_on_change('fixpath-reload', fixPath)
+		fixPathSettings.add_on_change('fixgopath-reload', fixGoPath)
 
 		# Save the original environ (particularly the original PATH) to restore later
 		global originalEnv
@@ -59,6 +64,7 @@ if isMac():
 			originalEnv[key] = environ[key]
 
 		fixPath()
+		fixGoPath()
 
 
 	def plugin_unloaded():
