@@ -38,10 +38,12 @@ if isMac():
 		if len(currSysPath) < 1:
 			return False
 
-		environ['PATH'] = currSysPath
+		additional_path = fixPathSettings.get("additional_path")
 
-		for pathItem in fixPathSettings.get("additional_path_items", []):
-			environ['PATH'] = pathItem + ':' + environ['PATH']
+		if len(additional_path) < 1:
+			environ['PATH'] = currSysPath
+		else:
+			environ['PATH'] = additional_path
 
 		return True
 
